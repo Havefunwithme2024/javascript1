@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sketchpad</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .controls {
+      margin-bottom: 10px;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      width: 960px;
+      height: 960px;
+      border: 1px solid black;
+    }
+    .square {
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <button id="resize">Resize Grid</button>
+  </div>
+  <div class="container"></div>
+  <script>
+    const container = document.querySelector('.container');
+    const resizeButton = document.getElementById('resize');
+
+    function createGrid(size) {
+      container.innerHTML = '';
+      const squareSize = 960 / size;
+      for (let i = 0; i < size * size; i++) {
+        const square = document.createElement('div');
+        square.classList.add('square');
+        square.style.width = `${squareSize}px`;
+        square.style.height = `${squareSize}px`;
+        square.addEventListener('mouseover', changeColor);
+        container.appendChild(square);
+      }
+    }
+
+    function changeColor(event) {
+      const square = event.target;
+      const currentOpacity = parseFloat(square.style.opacity) || 0;
+      const newOpacity = Math.min(currentOpacity + 0.1, 1);
+      square.style.backgroundColor = `rgb(${randomRGB()}, ${randomRGB()}, ${randomRGB()})`;
+      square.style.opacity = newOpacity;
+    }
+
+    function randomRGB() {
+      return Math.floor(Math.random() * 256);
+    }
+
+    resizeButton.addEventListener('click', () => {
+      let newSize = parseInt(prompt('Enter grid size (max 100):'));
+      if (newSize > 100 || newSize < 1 || isNaN(newSize)) {
+        alert('Please enter a number between 1 and 100.');
+        return;
+      }
+      createGrid(newSize);
+    });
+
+    createGrid(16);
+  </script>
+</body>
+</html>
